@@ -10,5 +10,4 @@ E.g. assertEquals(expected, actual, 1e-5);
 Therefore, this tool will find this kind of oracle approximation function
 
 In DL4j developers mostly used assertEquals functions using 3 or 4 parameters
-We found 4 different types of oracle approximation functions for test cases, whereas other frameworks in Python such as TensorFlow 
-developer use around 14 different functions for test cases.
+Using this tool, we found 4 different types of oracle approximation functions for test cases, whereas other frameworks in Python such as TensorFlow, developer use around 14 different kind of oracle approximation functions for test cases.
