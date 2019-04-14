@@ -1,4 +1,4 @@
-# OracleApproximationFinderTools
+# Oracle Approximation Finder Tools
 
 This tools will find the oracle approximation function from java deep learning framework (DL4j)
 For Example,
