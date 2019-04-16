@@ -15,10 +15,21 @@ public class FindingOracleApproximation extends VoidVisitorAdapter<ArrayList<Str
 	
 	public void visit(MethodCallExpr OAMethodExpr, ArrayList<String> OAcollector) {
 
+		String[] functionFormats = {">","<",">=","<="};
 		if(OAMethodExpr.toString().contains("assert") && OAMethodExpr.getArguments().size() >= 3) {
 			boolean isOA = checkOracleApproximationFunction(OAMethodExpr.getNameAsString().toString()); 
 			if(isOA) {
 			OAcollector.add(OAMethodExpr.getNameAsString().toString() +","+ OAMethodExpr.getBegin().get().line);
+			}
+		}
+		else if(  OAMethodExpr.toString().contains("assertTrue")) {
+			for (String s : functionFormats)
+			{
+			  if (OAMethodExpr.toString().contains(s))
+			  {
+				  OAcollector.add(OAMethodExpr.getNameAsString().toString() +","+ OAMethodExpr.getBegin().get().line);
+				break;
+			  }
 			}
 		}
 	}
@@ -32,6 +43,7 @@ public class FindingOracleApproximation extends VoidVisitorAdapter<ArrayList<Str
 				flag = false;
 			}
 			else flag = true;
+
 			return flag;
 		}
 }
