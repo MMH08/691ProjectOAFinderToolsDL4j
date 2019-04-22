@@ -15,6 +15,6 @@ Using this tool, we found 4 different types of oracle approximation functions fo
 In summary, this will find the oracle approximation function from java deep learning framework (DL4j) and finally export those oracle approximation functions into .csv file.
 
 
-# Oracle Approximation Function labelling
+# Oracle Approximation Function Manual Labelling
 - Online doc: 
 https://docs.google.com/spreadsheets/d/1sDx5aXX83nEDAM78tQ-rgDYfjNQgxgYzgzxKXx8DaaA/edit#gid=38151563
