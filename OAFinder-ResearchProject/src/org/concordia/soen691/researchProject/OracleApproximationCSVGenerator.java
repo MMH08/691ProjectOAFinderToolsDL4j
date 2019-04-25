@@ -37,6 +37,10 @@ public class OracleApproximationCSVGenerator {
 	
 	int numberOfFilesParsed = 0;
 	int numberOfOA = 0;
+	int totalAssertNotEquals = 0;
+	int totalAssertEquals = 0;
+	int totalAssertTrue = 0;
+	int totalAssertArrayEquals = 0;
 
 	public OracleApproximationCSVGenerator() {
 		resultArray = new ArrayList<>();
@@ -177,15 +181,20 @@ public class OracleApproximationCSVGenerator {
 
 	public void printResults() throws IOException {
 		System.out.println("\n\nPrinting Founded Oracle Approximation :");
-		 FileWriter writer = new FileWriter("C:\\Users\\Manik\\OADL4j.csv");
+		 FileWriter writer = new FileWriter("//Users//manikhossain//OADL4j.csv");
+		 ArrayList<String> uniqueOA = new ArrayList<>();
+		 ArrayList<String> AllSplitedOA = new ArrayList<>();
+		 
 		for (OracleApproximationFinderResponse resultElement : resultArray) {
 			Map<String, ArrayList<String>> innerMap = resultElement.getResultMap();
 			for (Map.Entry<String, ArrayList<String>> entry : innerMap.entrySet()) {
 				ArrayList<String> getAllOA = entry.getValue();
-				
+
 				for (String OAFunctions: getAllOA) {
-					//System.out.println(resultElement.getFileName() +"--" + OAFunctions);
 					
+					    String SplitedOA = OAFunctions.split(",")[0].strip();
+					    AllSplitedOA.add(SplitedOA);
+					    
 				        List<String> OAFunction = new ArrayList<>();
 				        OAFunction.add(resultElement.getFileName() +"," + OAFunctions);
 				        String collect = OAFunction.stream().collect(Collectors.joining(","));
@@ -194,10 +203,47 @@ public class OracleApproximationCSVGenerator {
 				       				
 					numberOfOA++;
 				}
+				
 			}
 		}
+		
+		for (String SingleuniqueOA1: AllSplitedOA) {
+			
+			boolean iscontain= uniqueOA.contains(SingleuniqueOA1);
+			
+			if(iscontain == false) {
+				uniqueOA.add(SingleuniqueOA1);
+			}
+			//count different functions
+			if(SingleuniqueOA1.equals("assertNotEquals")) {
+				
+				totalAssertNotEquals++;
+			}
+			else if(SingleuniqueOA1.equals("assertEquals")) {
+				
+				totalAssertEquals++;
+			}
+			else if(SingleuniqueOA1.equals("assertTrue")) {
+				
+				totalAssertTrue++;
+			}
+			else if(SingleuniqueOA1.equals("assertArrayEquals")) {
+				totalAssertArrayEquals++;
+	
+			}
+			
+		}
+		
 		System.out.println("\nTotal number of files parsed: " + numberOfFilesParsed);
 		System.out.println("\nTotal number of Oracle Approximation Found: " + numberOfOA);
+		System.out.println("Name of the different Oracle Approximation functions = " + uniqueOA);
+		System.out.println("Total number of different Oracle Approximation functions = " + uniqueOA.size());
+		
+		System.out.println("Total #assertNotEquals functions founds = " + totalAssertNotEquals);
+		System.out.println("Total #assertEquals functions= " + totalAssertEquals);
+		System.out.println("Total #assertTrue functions= " + totalAssertTrue);
+		System.out.println("Total #assertArrayEquals functions= " + totalAssertArrayEquals);
+		
 		writer.close();
 	}
 }
