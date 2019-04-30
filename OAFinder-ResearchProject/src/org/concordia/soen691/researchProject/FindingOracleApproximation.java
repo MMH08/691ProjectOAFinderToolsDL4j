@@ -3,16 +3,15 @@ package org.concordia.soen691.researchProject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 
 
-public class FindingOracleApproximation extends VoidVisitorAdapter<ArrayList<String>>{
+public class FindingOracleApproximation extends VoidVisitorAdapter<ArrayList<String>> {
 	public FindingOracleApproximation() {}
 	
-	
+	int totalAssertion = 0;
 	public void visit(MethodCallExpr OAMethodExpr, ArrayList<String> OAcollector) {
 
 		String[] functionFormats = {">","<",">=","<="};
@@ -64,9 +63,15 @@ public class FindingOracleApproximation extends VoidVisitorAdapter<ArrayList<Str
 			  }
 			}
 		}
+		
+		if(OAMethodExpr.toString().contains("assert")){
+			totalAssertion++;
+			System.out.println("Total number of Assertion function counts... :" +totalAssertion);
+		}
+		
 	}
 	
-	//Removing some unwanted functions which looks like Oracle Approximations
+	//Remove some unwanted functions which looks like Oracle Approximations
 	private boolean checkOracleApproximationFunction(String functionsName) {
 			boolean flag = false; 
 			String[] unwantedFunctions = {"assertCharacterCategories","assertExpectedNumberMachineIdsJvmIdsThreadIds","assertMultiThreadedTokenizedStreamEquals",
@@ -78,4 +83,8 @@ public class FindingOracleApproximation extends VoidVisitorAdapter<ArrayList<Str
 
 			return flag;
 		}
+	
 }
+
+
+
