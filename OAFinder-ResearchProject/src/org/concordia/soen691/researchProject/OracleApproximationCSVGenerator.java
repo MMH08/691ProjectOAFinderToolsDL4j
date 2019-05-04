@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -16,6 +17,10 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 
 import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.stmt.ThrowStmt;
 import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
@@ -41,6 +46,8 @@ public class OracleApproximationCSVGenerator {
 	int totalAssertEquals = 0;
 	int totalAssertTrue = 0;
 	int totalAssertArrayEquals = 0;
+	int numberOfTestCases = 0;
+	ArrayList<String> AllOATestCases = new ArrayList<>();
 
 	public OracleApproximationCSVGenerator() {
 		resultArray = new ArrayList<>();
@@ -70,6 +77,8 @@ public class OracleApproximationCSVGenerator {
 		// JavaParser
 		com.github.javaparser.ast.CompilationUnit cu = JavaParser.parse(in);
 
+		findAllTestCases(cu);
+		
 		parser = ASTParser.newParser(AST.JLS8);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 
@@ -116,7 +125,7 @@ public class OracleApproximationCSVGenerator {
 			//System.out.println("Searching for Oracle Approximation " + patternName);
 
 			pattern.visit(cu, responseElement);
-
+			
 			if (responseElement.isEmpty() == false) {
 				//System.out.println("\t Oracle Approximation found");
 				bfResponse.getResultMap().put(patternName, responseElement);
@@ -151,6 +160,18 @@ public class OracleApproximationCSVGenerator {
 		cuJDT = null;
 		parser = null;
 		numberOfFilesParsed++;
+	}
+
+	private void findAllTestCases(CompilationUnit cu) {
+		
+		List<MethodCallExpr> allAssertMethods = cu.findAll(MethodCallExpr.class);
+		for (MethodCallExpr assertMethod: allAssertMethods) {
+			if(assertMethod.toString().contains("assert")) {
+				numberOfTestCases++;
+				break;
+			}
+			
+		}
 	}
 
 	public void parseDirectoryStructure() {
@@ -196,6 +217,8 @@ public class OracleApproximationCSVGenerator {
 					    AllSplitedOA.add(SplitedOA);
 					    
 				        List<String> OAFunction = new ArrayList<>();
+				        // add all the file names which contain oracle approximation 
+				        AllOATestCases.add(resultElement.getFileName());
 				        OAFunction.add(resultElement.getFileName() +"," + OAFunctions);
 				        String collect = OAFunction.stream().collect(Collectors.joining(","));
 				        writer.write("\n");
@@ -243,6 +266,10 @@ public class OracleApproximationCSVGenerator {
 		System.out.println("Total #assertEquals functions= " + totalAssertEquals);
 		System.out.println("Total #assertTrue functions= " + totalAssertTrue);
 		System.out.println("Total #assertArrayEquals functions= " + totalAssertArrayEquals);
+		System.out.println("\nTotal number of Test cases: " + numberOfTestCases);
+		// get all the unique file names which contain oracle approximation 
+		List<String> getOATestCases = AllOATestCases.stream().distinct().collect(Collectors.toList());
+		System.out.println("Total number of Oracle Approximation Test cases: " + getOATestCases.size());
 		
 		writer.close();
 	}
