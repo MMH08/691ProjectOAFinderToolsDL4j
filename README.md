@@ -9,7 +9,9 @@ For Example,assertEquals(double expected, double actual, double delta). Here, de
 - Total #assertNotEquals functions founds = 7		
 - Total #assertEquals functions= 789		
 - Total #assertTrue functions= 133		
-- Total #assertArrayEquals functions= 35		
+- Total #assertArrayEquals functions= 35	
+- Total number of Test cases= 286			
+- Total number of Oracle Approximation Test cases= 120			
 
 In DL4j developers mostly used assertEquals functions using 3 or 4 parameters. so, we found 4 different types of oracle approximation functions for test cases, whereas other frameworks in Python such as TensorFlow, developer use around 14 different kind of oracle approximation functions for test cases.
 
